@@ -32,6 +32,9 @@ namespace SilentOrbit.ProtocolBuffers
         [Value(0, Required = true)]
         public IEnumerable<string> InputProto { get; set; }
 
+        [Option('i', "interfaces", Required = false, HelpText = "Generate interfaces.")]
+        public bool GenerateInterfaces { get; set; }
+
         /// <summary>
         /// Path to the generated cs files
         /// </summary>

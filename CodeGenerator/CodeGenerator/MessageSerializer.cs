@@ -16,7 +16,7 @@ namespace SilentOrbit.ProtocolBuffers
             else
             {
                 cw.Attribute("System.Serializable()");
-                cw.Bracket(m.OptionAccess + " partial " + m.OptionType + " " + m.SerializerType);
+                cw.Bracket(m.OptionAccess + " partial " + m.OptionType + " " + m.SerializerType + " : " + m.CsInterfaceType);
             }
 
             GenerateReader(m, cw);

@@ -25,6 +25,11 @@ namespace SilentOrbit.ProtocolBuffers
         public virtual string CsType { get; set; }
 
         /// <summary>
+        /// The c# interface name
+        /// </summary>
+        public virtual string CsInterfaceType { get; set; }
+
+        /// <summary>
         /// The C# namespace for this item
         /// </summary>
         public virtual string CsNamespace
@@ -46,6 +51,20 @@ namespace SilentOrbit.ProtocolBuffers
         public virtual string FullCsType
         {
             get { return CsNamespace + "." + CsType; }
+        }
+
+        public virtual string FullInterfaceType 
+        {
+            get {
+                if (OptionNamespace == null)
+                {
+                    return Parent.CsNamespace + "." + CsInterfaceType;
+                }
+                else
+                {
+                    return OptionNamespace + "." + CsInterfaceType; 
+                }
+            }
         }
 
         /// <summary>

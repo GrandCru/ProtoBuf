@@ -38,6 +38,11 @@ namespace SilentOrbit.ProtocolBuffers
         public string CsName { get; set; }
 
         /// <summary>
+        /// Interface name in generated c# code.
+        /// </summary>
+        public string InterfaceName { get; set; }
+
+        /// <summary>
         /// Wire format ID
         /// </summary>
         public int ID { get; set; }

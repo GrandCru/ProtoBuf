@@ -11,7 +11,7 @@ namespace SilentOrbit.Code
     {
         #region Settings
         public static string DefaultIndentPrefix = "    ";
-        public static string DefaultNewLine = "\r\n";
+        public static string DefaultNewLine = "\n";
 
         public string IndentPrefix;
         public string NewLine;
