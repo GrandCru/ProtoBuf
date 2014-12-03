@@ -150,7 +150,8 @@ This file will be overwritten when CodeGenerator is run.");
                 ReadCode(codeWriter, "ProtocolParserExceptions", false);
                 ReadCode(codeWriter, "ProtocolParserFixed", false);
                 ReadCode(codeWriter, "ProtocolParserKey", false);
-                ReadCode(codeWriter, "ProtocolParserMemory", false);
+               
+                // ReadCode(codeWriter, "ProtocolParserMemory", false);
                 ReadCode(codeWriter, "ProtocolParserVarInt", false);
             }
         }
