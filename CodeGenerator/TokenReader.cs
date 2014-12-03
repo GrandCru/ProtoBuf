@@ -61,24 +61,7 @@ namespace SilentOrbit.ProtocolBuffers
             }
         }
 
-        /// <summary>
-        /// Return the next token that is not a comment
-        /// </summary>
         public string ReadNext()
-        {
-            while (true)
-            {
-                string token = ReadNextComment();
-                if (token.StartsWith("/"))
-                    continue;
-                return token;
-            }
-        }
-
-        /// <summary>
-        /// Return the next token including comments
-        /// </summary>
-        public string ReadNextComment()
         {
             string c;   //Character
 
@@ -98,19 +81,10 @@ namespace SilentOrbit.ProtocolBuffers
             //Follow token
             string token = c;
             bool parseString = false;
-            bool parseLineComment = false;
             bool parseComment = false;
 
             if (token == "/")
-            {
-                token += GetChar();
-                if (token == "//")
-                    parseLineComment = true;
-                else if (token == "/*")
-                    parseComment = true;
-                else
-                    throw new ProtoFormatException("Badly formatted comment", this);
-            }
+                parseComment = true;
             if (token == "\"")
             {
                 parseString = true;
@@ -120,15 +94,10 @@ namespace SilentOrbit.ProtocolBuffers
             while (true)
             {
                 c = GetChar();
-                if (parseLineComment)
+                if (parseComment)
                 {
                     if (c == "\r" || c == "\n")
                         return token;
-                }
-                else if (parseComment)
-                {
-                    if (c == "/" && token[token.Length - 1] == '*')
-                        return token.Substring(0, token.Length - 1);
                 }
                 else if (parseString)
                 {

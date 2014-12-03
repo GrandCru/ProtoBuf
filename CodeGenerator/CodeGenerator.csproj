@@ -14,7 +14,7 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>..\bin\CodeGenerator\Debug</OutputPath>
+    <OutputPath>..\bin</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>..\bin\CodeGenerator\Release</OutputPath>
+    <OutputPath>..\bin</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -72,12 +72,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProtocolParser\ProtocolParserVarInt.cs">
       <LogicalName>ProtocolParserVarInt</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ProtocolParser\ProtocolParserMemory.cs">
-      <LogicalName>ProtocolParserMemory</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ProtocolParser\ProtocolParserExceptions.cs">
-      <LogicalName>ProtocolParserExceptions</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

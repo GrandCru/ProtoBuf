@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
-//using System.Collections.Concurrent;
 
 // 
 //  Read/Write string and byte arrays 
@@ -11,6 +9,7 @@ namespace SilentOrbit.ProtocolBuffers
 {
     public static partial class ProtocolParser
     {
+
         public static string ReadString(Stream stream)
         {
             return Encoding.UTF8.GetString(ReadBytes(stream));
@@ -31,7 +30,7 @@ namespace SilentOrbit.ProtocolBuffers
             {
                 int r = stream.Read(buffer, read, length - read);
                 if (r == 0)
-                    throw new ProtocolBufferException("Expected " + (length - read) + " got " + read);
+                    throw new InvalidDataException("Expected " + (length - read) + " got " + read);
                 read += r;
             }
             return buffer;
@@ -66,20 +65,10 @@ namespace SilentOrbit.ProtocolBuffers
 
     }
 
-    [Obsolete("Renamed to PositionStream")]
-    public class StreamRead : PositionStream
-    {
-        public StreamRead (Stream baseStream) : base(baseStream)
-        {
-            
-        }
-    }
-
     /// <summary>
-    /// Wrapper for streams that does not support the Position property.
-    /// Adds support for the Position property.
+    /// Wrapper for streams that does not support the Position property
     /// </summary>
-    public class PositionStream : Stream
+    public class StreamRead : Stream
     {
         Stream stream;
 
@@ -97,7 +86,7 @@ namespace SilentOrbit.ProtocolBuffers
         /// <param name='maxLength'>
         /// Max length allowed to read from the stream.
         /// </param>
-        public PositionStream(Stream baseStream)
+        public StreamRead(Stream baseStream)
         {
             this.stream = baseStream;
         }

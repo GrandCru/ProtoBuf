@@ -5,7 +5,7 @@ namespace SilentOrbit.ProtocolBuffers
 {
     static class MessageSerializer
     {
-        public static void GenerateClassSerializer(ProtoMessage m, CodeWriter cw, Options options)
+        public static void GenerateClassSerializer(ProtoMessage m, CodeWriter cw)
         {
             if (m.OptionExternal || m.OptionType == "interface")
             {
@@ -21,11 +21,11 @@ namespace SilentOrbit.ProtocolBuffers
 
             GenerateReader(m, cw);
 
-            GenerateWriter(m, cw, options);
+            GenerateWriter(m, cw);
             foreach (ProtoMessage sub in m.Messages.Values)
             {
                 cw.WriteLine();
-                GenerateClassSerializer(sub, cw, options);
+                GenerateClassSerializer(sub, cw);
             }
             cw.EndBracket();
             cw.WriteLine();
@@ -162,7 +162,7 @@ namespace SilentOrbit.ProtocolBuffers
                     cw.WriteLine("if (stream.Position == limit)");
                     cw.WriteIndent("break;");
                     cw.WriteLine("else");
-                    cw.WriteIndent("throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException(\"Read past max limit\");");
+                    cw.WriteIndent("throw new InvalidOperationException(\"Read past max limit\");");
                     cw.EndBracket();
                 }
 
@@ -209,7 +209,7 @@ namespace SilentOrbit.ProtocolBuffers
                 cw.Comment("Reading field ID > 16 and unknown field ID/wire type combinations");
                 cw.Switch("key.Field");
                 cw.Case(0);
-                cw.WriteLine("throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException(\"Invalid field id: 0, something went wrong in the stream\");");
+                cw.WriteLine("throw new InvalidDataException(\"Invalid field id: 0, something went wrong in the stream\");");
                 foreach (Field f in m.Fields.Values)
                 {
                     if (f.ID < 16)
@@ -250,16 +250,8 @@ namespace SilentOrbit.ProtocolBuffers
         /// <summary>
         /// Generates code for writing a class/message
         /// </summary>
-        static void GenerateWriter(ProtoMessage m, CodeWriter cw, Options options)
+        static void GenerateWriter(ProtoMessage m, CodeWriter cw)
         {
-            string stack = "global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack";
-            if (options.ExperimentalStack != null)
-            {
-                cw.WriteLine("[ThreadStatic]");
-                cw.WriteLine("static global::SilentOrbit.ProtocolBuffers.MemoryStreamStack stack = new " + options.ExperimentalStack + "();");
-                stack = "stack";
-            }
-
             cw.Summary("Serialize the instance into the stream");
             cw.Bracket(m.OptionAccess + " static void Serialize(Stream stream, " + m.CsType + " instance)");
             if (m.OptionTriggers)
@@ -271,12 +263,12 @@ namespace SilentOrbit.ProtocolBuffers
                 cw.WriteLine("BinaryWriter bw = new BinaryWriter(stream);");
 
             //Shared memorystream for all fields
-            cw.WriteLine("var msField = " + stack + ".Pop();");
+            cw.Using("var msField = new MemoryStream(" + m.MaxFieldBufferSize() + ")");
 
             foreach (Field f in m.Fields.Values)
                 FieldSerializer.FieldWriter(m, f, cw);
 
-            cw.WriteLine(stack + ".Push(msField);");
+            cw.EndBracket();
 
             if (m.OptionPreserveUnknown)
             {

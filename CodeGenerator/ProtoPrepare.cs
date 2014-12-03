@@ -11,7 +11,7 @@ namespace SilentOrbit.ProtocolBuffers
         /// <summary>
         /// Convert message/class and field/propery names to CamelCase
         /// </summary>
-        bool ConvertToCamelCase = true;
+        bool ConvertToCamelCase = false;
 
         public ProtoPrepare(Options options)
         {
@@ -65,7 +65,7 @@ namespace SilentOrbit.ProtocolBuffers
                     if (f.ProtoType is ProtoBuiltin && ((ProtoBuiltin)f.ProtoType).ProtoName == "bytes")
                         throw new NotImplementedException();
                     if (f.ProtoType is ProtoMessage)
-                        throw new ProtoFormatException("Message can't have a default", f.Source);
+                        throw new InvalidDataException("Message can't have a default");
                 }
             }
 
@@ -141,7 +141,7 @@ namespace SilentOrbit.ProtocolBuffers
             if (f.OptionPacked)
             {
                 if (f.ProtoType.WireType == Wire.LengthDelimited)
-                    throw new ProtoFormatException("Length delimited types cannot be packed", f.Source);
+                    throw new InvalidOperationException("Length delimited types cannot be packed");
             }
         }
 
