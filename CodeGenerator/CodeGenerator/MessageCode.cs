@@ -122,6 +122,13 @@ namespace SilentOrbit.ProtocolBuffers
 
         public static void GenerateEnum(ProtoEnum me, CodeWriter cw)
         {
+            if (me.OptionExternal)
+            {
+                cw.Comment("Written elsewhere");
+                cw.Comment(me.OptionAccess + " " + me.OptionType + " " + me.CsType + " {}");
+                return;
+            }
+
             cw.Bracket("public enum " + me.CsType);
             foreach (var epair in me.Enums)
             {

@@ -24,6 +24,22 @@ namespace SilentOrbit.ProtocolBuffers
             }
         }
 
+        public void Import(ProtoCollection proto)
+        {
+            foreach (var m in proto.Messages.Values)
+            {
+                m.OptionExternal = true;
+                Messages.Add(m.ProtoName, m);
+                m.Parent = this;
+            }
+            foreach (var e in proto.Enums.Values)
+            {
+                e.OptionExternal = true;
+                Enums.Add(e.ProtoName, e);
+                e.Parent = this;
+            }
+        }
+
         public void Merge(ProtoCollection proto)
         {
             foreach (var m in proto.Messages.Values)

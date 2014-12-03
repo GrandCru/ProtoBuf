@@ -34,7 +34,7 @@ namespace SilentOrbit.ProtocolBuffers
 
             try
             {
-                ParseMessages(tr, p);
+                ParseMessages(tr, p, path);
             }
             catch (EndOfStreamException)
             {
@@ -57,7 +57,7 @@ namespace SilentOrbit.ProtocolBuffers
             return true;
         }
 
-        static void ParseMessages(TokenReader tr, ProtoCollection p)
+        static void ParseMessages(TokenReader tr, ProtoCollection p, string path)
         {
             string package = "Example";
 
@@ -85,7 +85,7 @@ namespace SilentOrbit.ProtocolBuffers
                             ParseOption(tr, p);
                             break;
                         case "import": //Ignored
-                            tr.ReadNext();
+                            ParseImport(tr, p, path);
                             tr.ReadNextOrThrow(";");
                             break;
                         case "package":
@@ -109,6 +109,16 @@ namespace SilentOrbit.ProtocolBuffers
                     throw new ProtoFormatException("Unexpected EOF", tr);
                 }
             }
+        }
+
+        static void ParseImport(TokenReader tr, ProtoCollection p, string path)
+        {
+            var searchDir = Path.GetDirectoryName(Path.GetFullPath(path));
+            var importFile = tr.ReadNext();
+            var proto = new ProtoCollection();
+            ProtoParser.Parse(searchDir + Path.DirectorySeparatorChar + importFile, proto);
+            p.Import(proto);
+
         }
 
         static void ParseMessage(TokenReader tr, ProtoMessage parent, string package)
