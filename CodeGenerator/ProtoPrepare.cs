@@ -35,6 +35,7 @@ namespace SilentOrbit.ProtocolBuffers
                 if (e.OptionNamespace == null)
                     e.OptionNamespace = GetCamelCase(e.Package);
                 e.CsType = GetCamelCase(e.ProtoName);
+                e.CsInterfaceType = e.CsType;
             }
         }
 
@@ -42,9 +43,11 @@ namespace SilentOrbit.ProtocolBuffers
         {
             //Name of message and enums
             m.CsType = GetCamelCase(m.ProtoName);
+            m.CsInterfaceType = "I" + m.CsType;
             foreach (ProtoEnum e in m.Enums.Values)
             {
                 e.CsType = GetCamelCase(e.ProtoName);
+                e.CsInterfaceType = e.CsType;
             }
 
             foreach (ProtoMessage sub in m.Messages.Values)
@@ -121,6 +124,7 @@ namespace SilentOrbit.ProtocolBuffers
         {
             //Change property name to C# style, CamelCase.
             f.CsName = GetCSPropertyName(m, f.ProtoName);
+            f.InterfaceName = "I" + f.CsName;
 
             f.ProtoType = GetBuiltinProtoType(f.ProtoTypeName);
             if (f.ProtoType == null)
